@@ -55,6 +55,37 @@ public class JSMVector {
         return Math.pow(val/n, 1/n);
     } 
 
+    public static <T extends Number, U extends Collection<T>> T meadian(U nums) {
+        int n = nums.size();
+        nums.sort((num1, num2) -> num1 > num2);
+        return nums.get(n/2);
+    } 
+
+    public static <T extends Number, U extends Collection<T>> T meadian(U nums) {
+        HashMap<T, Integer> occurences = new HashMap<T, Integer>();
+        for (Numer num: nums) {
+            if (occurences.containsKey(num)) {
+                occurences.put(num, occurences.get(num)+1);
+            } else {
+                occurences.put(num, 1);
+            }
+        }
+
+        int tmpMax = -1;
+        Number tmpNum;
+        for (Number key: occurences.keySet()) {
+            int current = occurences.get(key);
+            if (current > tmpMax) {
+                tmpMax = current;
+                tmpNum = key;
+            }
+        }
+
+        return key;
+    } 
+
+
+
     public static void main(String[] args) {
         ArrayList<Double> nums = new ArrayList<Double>(){{
             add(0.321);
