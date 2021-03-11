@@ -1,5 +1,7 @@
 package jsm.core;
 
+import java.util.HashMap;
+
 public class JSMEvaluate {
     /**
      * @param  type - S(sum) | P(product) math operation for evaluation
@@ -7,20 +9,30 @@ public class JSMEvaluate {
      * @param  n - end index 
      * @param func - mathematical expression to be executed
     */
-    public static double evaluate(char type, int i, int n, String... func) {
+    public static <T extends Number> double seriesOperation(char type, final int i, int n, String... func) {
         String tmpFnc = func.length > 0 ? func[0] : null;
         double val = .0;
-        if (type == 'S') for (; i <= n; i++) val += tmpFnc != null ? exectute(tmpFnc, i, n) : i;
+        HashMap<String, Number> values = new HashMap<String, Number>() {{
+            put("n", n);
+            put("i", i);
+        }};
+        if (type == 'S') for (int j = i; j <= n; j++) {
+            values.put("i", j);
+            val += tmpFnc != null ? exectute(tmpFnc, values) : j;
+        }
         else if (type == 'P') {
             ++val;
-            for (; i <= n; i++) val *= tmpFnc != null ? exectute(tmpFnc, i, n) : i;
+            for (int j = i; j <= n; j++) {
+                values.put("i", j);
+                val *= tmpFnc != null ? exectute(tmpFnc, values) : j;
+            }
         }
         else throw new RuntimeException(String.format("Invalid function called - %c", type));
         return val;
     }
 
     /**
-     * function evaluates a math expression with 2 paramters (i and n)
+     * function seriesOperations a math expression with 2 paramters (i and n)
      * 
      * @param  equation - arithmetic expression
      * @param  i - current value of I
@@ -28,13 +40,17 @@ public class JSMEvaluate {
      * 
      * @credits https://stackoverflow.com/a/26227947
     */
-    public static double exectute(final String equation, int i, int n) {
-        String eq = equation.replaceAll("i", String.valueOf(i)).replaceAll("n", String.valueOf(n));
+    public static double exectute(final String equation, HashMap<String, Number> mappedParams) {
+        String eq = equation;
+        for (String key: mappedParams.keySet()) {
+            eq = eq.replaceAll(key, String.valueOf(mappedParams.get(key)));
+        }
+        final String finalEq = eq;
         return new Object() {
             int pos = -1, ch;
     
             void nextChar() {
-                ch = (++pos < eq.length()) ? eq.charAt(pos) : -1;
+                ch = (++pos < finalEq.length()) ? finalEq.charAt(pos) : -1;
             }
     
             boolean eat(int charToEat) {
@@ -49,7 +65,7 @@ public class JSMEvaluate {
             double parse() {
                 nextChar();
                 double x = parseExpression();
-                if (pos < eq.length()) throw new RuntimeException("Unexpected: " + (char)ch);
+                if (pos < finalEq.length()) throw new RuntimeException("Unexpected: " + (char)ch);
                 return x;
             }
     
@@ -88,15 +104,16 @@ public class JSMEvaluate {
                     eat(')');
                 } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
                     while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
-                    x = Double.parseDouble(eq.substring(startPos, this.pos));
+                    x = Double.parseDouble(finalEq.substring(startPos, this.pos));
                 } else if (ch >= 'a' && ch <= 'z') { // functions
                     while (ch >= 'a' && ch <= 'z') nextChar();
-                    String func = eq.substring(startPos, this.pos);
+                    String func = finalEq.substring(startPos, this.pos);
                     x = parseFactor();
                     if (func.equals("sqrt")) x = Math.sqrt(x);
                     else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
                     else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
                     else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
+                    else if (func.equals("fac")) x = factorial(x);
                     else throw new RuntimeException("Unknown function: " + func);
                 } else {
                     throw new RuntimeException("Unexpected: " + (char)ch);
@@ -112,12 +129,12 @@ public class JSMEvaluate {
     /**
      * @param num -> num!
     */
-    public static double factorial(int num) {
-        return evaluate('P', 1, num, "i");
+    public static <T extends Number> double factorial(T num) {
+        return seriesOperation('P', 1, (int)num, "i");
     }
 
     public static void main(String[] args) {
-        double val = evaluate('S', 1, 10, "(i+1)*2");
-        System.out.print(factorial(6));
+        double val = seriesOperation('S', 1, 10, "i*i");
+        System.out.print(val);
     }
 }
