@@ -1,4 +1,4 @@
-package jsm.core;
+package core;
 
 import java.util.HashMap;
 
@@ -130,7 +130,7 @@ public class JSMEvaluate {
      * @param num -> num!
     */
     public static <T extends Number> double factorial(T num) {
-        return seriesOperation('P', 1, (int)num, "i");
+        return seriesOperation('P', 1, num.intValue(), "i");
     }
 
     public static void main(String[] args) {

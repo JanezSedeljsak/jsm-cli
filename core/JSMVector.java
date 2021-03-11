@@ -1,4 +1,4 @@
-package jsm.core;
+package core;
 
 import java.util.*;
 import java.math.*;
