@@ -1,6 +1,6 @@
 package jsm.core;
 
-public class JEvaluate {
+public class JSMEvaluate {
     /**
      * @param  type - S(sum) | P(product) math operation for evaluation
      * @param  i - start index

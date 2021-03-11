@@ -1,3 +1,3 @@
 @ECHO OFF
-kotlinc tester.kt && kotlin TesterKt
+kotlinc JSMTester.kt && kotlin JSMTesterKt
 PAUSE
