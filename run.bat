@@ -15,7 +15,7 @@
 
     :CoreTester
         echo Testing JSM Core....
-        kotlinc JSMTester.kt && kotlin JSMTesterKt
+        kotlinc Main.kt -d build && cd build && kotlin MainKt test && cd..
         goto End
 
     :GenerateTemplate
