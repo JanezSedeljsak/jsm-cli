@@ -1,5 +1,5 @@
 @echo off
-    if %1% == knit goto KnitToPdf
+    if %1% == knit-pdf goto KnitToPdf
     if %1% == test goto CoreTester
     if %1% == generate-template goto GenerateTemplate
     if %1% == edit-template goto EditTemplateOnline
@@ -12,6 +12,7 @@
             goto End
         )
         echo Generating Pdf....
+        kotlinc Main.kt -d build && cd build && kotlin MainKt knit-pdf %2 && cd..
         goto End
 
     :CoreTester
