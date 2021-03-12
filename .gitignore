@@ -1,4 +1,5 @@
 build/
 META-INF/
 tests_log/
+templates/
 *.class
