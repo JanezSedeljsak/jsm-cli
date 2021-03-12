@@ -55,15 +55,15 @@ public class JSMVector {
         return Math.pow(val/n, 1/n);
     } 
 
-    public static <T extends Number, U extends Collection<T>> T meadian(U nums) {
+    /*public static <T extends Number, U extends Collection<T>> double meadian(U nums) {
         int n = nums.size();
-        nums.sort((num1, num2) -> num1 > num2);
-        return nums.get(n/2);
+        ((ArrayList<Double>) nums).sort((num1, num2) -> (int)(num1 - num2));
+        return (double)nums.toArray()[n/2];
     } 
 
-    public static <T extends Number, U extends Collection<T>> T meadian(U nums) {
+    public static <T extends Number, U extends Collection<T>> double mean(U nums) {
         HashMap<T, Integer> occurences = new HashMap<T, Integer>();
-        for (Numer num: nums) {
+        for (Number num: nums) {
             if (occurences.containsKey(num)) {
                 occurences.put(num, occurences.get(num)+1);
             } else {
@@ -72,7 +72,7 @@ public class JSMVector {
         }
 
         int tmpMax = -1;
-        Number tmpNum;
+        double tmpNum;
         for (Number key: occurences.keySet()) {
             int current = occurences.get(key);
             if (current > tmpMax) {
@@ -81,7 +81,7 @@ public class JSMVector {
             }
         }
 
-        return key;
+        return tmpNum;
     } 
 
 
@@ -93,6 +93,8 @@ public class JSMVector {
             add(1.3);
         }};
         double x1 = vectorSum(nums);
-        System.out.println(x1);
-    }
+        double[] medianSearch = new double[] {1,3,3,4,5,5,6,8};
+        double x2 = .4;
+        System.out.printf("x1: %f, x2: %f", x1, x2);
+    }*/
 }
