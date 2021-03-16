@@ -4,6 +4,7 @@
     if %1% == generate-template goto GenerateTemplate
     if %1% == edit-template goto EditTemplateOnline
     if %1% == javac goto CompileJavaClasses
+    if %1% == help goto ShowDocs
     goto End
 
     :KnitToPdf
@@ -28,6 +29,10 @@
         goto End
 
     :EditTemplateOnline
+         if %2. ==. (
+            echo Missing markdown file input
+            goto End
+        )
         :: open website for editing markdown + live preview of non executable parts
         start "" https://stackedit.io/app#
         goto End
@@ -43,5 +48,16 @@
         echo Succesfully compiled....
         goto End
 
+    :ShowDocs
+        echo List of valid commands:
+        echo "   jsm knit-pdf @fileName => generate pdf from a template inside the /templates directory"
+        echo "   jsm test => run the application test for the core methods"
+        echo "   jsm generate-template [@fileName] => generates a basic markdown template @fileName param is optional"
+        echo "   jsm edit-template @fileName => edit a specific template from the /templates directory"
+        echo "   jsm javac - compile all the java classes inside of core"
+        goto AfterHelp 
+
     :End
+        echo Run "jsm help" to view the list of valid commands.
+    :AfterHelp
 PAUSE
