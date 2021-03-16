@@ -1,41 +1,45 @@
 @echo off
-    if %1% == knit-pdf goto KnitToPdf
-    if %1% == test goto CoreTester
-    if %1% == generate-template goto GenerateTemplate
-    if %1% == edit-template goto EditTemplateOnline
-    if %1% == javac goto CompileJavaClasses
-    if %1% == help goto ShowDocs
-    goto End
+    set MAIN_ENTRY = %CD%\build\MainKt
+    if "%~1" == "knit-pdf" goto KnitToPdf
+    if "%~1" == "test" goto CoreTester
+    if "%~1" == "generate-template" goto GenerateTemplate
+    if "%~1" == "edit-template" goto EditTemplateOnline
+    if "%~1" == "javac" goto CompileJavaClasses
+    if "%~1" == "help" goto ShowDocs
+    if "%~1" == "" goto ShowHelp
+
+    echo "Invalid action argument (%~1)! Options: [knit-pdf | test | generate-template | edit-tempalte | javac | help]"
+    goto AfterHelp
 
     :KnitToPdf
         if %2. ==. (
             echo Missing markdown file input
-            goto End
+            goto ShowHelp
         )
         echo Generating Pdf....
-        kotlinc Main.kt -d build && cd build && kotlin MainKt knit-pdf %2 && cd..
-        goto End
+        kotlinc %CD%\Main.kt -d %CD%\build && kotlin %MAIN_ENTRY% knit-pdf %2
+        goto AfterHelp
 
     :CoreTester
         echo Testing JSM Core....
         if not exist tests_log mkdir tests_log
-        kotlinc Main.kt -d build && cd build && kotlin MainKt test && cd..
-        goto End
+        kotlinc %CD%\Main.kt -d %CD%\build && kotlin %MAIN_ENTRY% test
+        goto AfterHelp
 
     :GenerateTemplate
         echo Generating markdown template....
         if not exist templates mkdir templates
-        kotlinc Main.kt -d build && cd build && kotlin MainKt generate-template %2 && cd..
-        goto End
+        kotlinc %CD%\Main.kt -d %CD%\build && kotlin %MAIN_ENTRY% generate-template %2
+        goto AfterHelp
 
     :EditTemplateOnline
          if %2. ==. (
             echo Missing markdown file input
-            goto End
+            goto ShowHelp
         )
         :: open website for editing markdown + live preview of non executable parts
         start "" https://stackedit.io/app#
-        goto End
+        goto AfterHelp
 
     :CompileJavaClasses
         echo Deleting data from build...
@@ -46,7 +50,7 @@
             echo Compiling %%f
         ) 
         echo Succesfully compiled....
-        goto End
+        goto AfterHelp
 
     :ShowDocs
         echo List of valid commands:
@@ -57,7 +61,7 @@
         echo "   jsm javac - compile all the java classes inside of core"
         goto AfterHelp 
 
-    :End
+    :ShowHelp
         echo Run "jsm help" to view the list of valid commands.
     :AfterHelp
 PAUSE
